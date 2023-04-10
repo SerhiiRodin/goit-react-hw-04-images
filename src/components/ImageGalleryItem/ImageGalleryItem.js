@@ -1,5 +1,3 @@
-// import {Modal} from 'components/Modal/Modal';
-// import { useState } from 'react';
 import PropTypes from 'prop-types';
 import css from './ImageGalleryItem.module.css';
 
@@ -9,12 +7,6 @@ export const ImageGalleryItem = ({
   tags,
   onImageClick,
 }) => {
-  // const [showModal, setShowModal] = useState(false);
-
-  // const toggleModal = () => {
-  //   setShowModal(!showModal);
-  // };
-
   return (
     <li className={css.ImageGalleryItem}>
       <img
