@@ -1,158 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { fetchImages } from 'services/services';
-import Loader from 'components/Loader/Loader';
+import PropTypes from 'prop-types';
 import css from './ImageGallery.module.css';
-import { toast } from 'react-toastify';
+
 import 'react-toastify/dist/ReactToastify.css';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
-import Button from 'components/Button/Button';
 
-export const ImageGallery = ({ inputValue }) => {
-  const [images, setImages] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [page, setPage] = useState(1);
-  const [disabled, setDisabled] = useState(false);
-
-  // state = {
-  //   images: [],
-  //   loading: false,
-  //   error: null,
-  //   page: 1,
-  //   disabled: false,
-  // };
-  const isFirstRender = useRef(true);
-
-  // const onFetchInfo = useCallback(() => {
-  //   fetchImages(inputValue, page)
-  //     .then(data => {
-  //       console.log(data);
-  //       setImages([...images, ...data.hits]);
-
-  //       if (data.hits.length === 0) {
-  //         toast.warn('Nothing found!!!', { autoClose: 1000 });
-  //         setImages([]);
-  //         setLoading(false);
-  //         setError(true);
-  //         setPage(1);
-  //         setDisabled(false);
-
-  //         return;
-  //       }
-
-  //       if (data.hits.length === 12) {
-  //         setDisabled(true);
-  //       } else {
-  //         setDisabled(false);
-  //       }
-  //     })
-  //     .catch(error => {
-  //       toast.error('Connection error!!!', { autoClose: 1000 });
-
-  //       setError(error);
-  //       setDisabled(false);
-  //       setImages([]);
-  //     })
-  //     .finally(() => setLoading(false));
-  // }, [images, inputValue, page]);
-
-  useEffect(() => {
-    // if (isFirstRender) {
-    //   isFirstRender.current = false;
-    //   return;
-    // }
-
-    if (!inputValue) {
-      console.log('Пустой inputValue');
-      return;
-    }
-
-    const onFetchInfo = () => {
-      fetchImages(inputValue, page)
-        .then(data => {
-          console.log(data);
-          setImages(images => [...images, ...data.hits]);
-
-          if (data.hits.length === 0) {
-            toast.warn('Nothing found!!!', { autoClose: 1000 });
-            setImages([]);
-            setLoading(false);
-            setError(true);
-            setPage(1);
-            setDisabled(false);
-
-            return;
-          }
-
-          if (data.hits.length === 12) {
-            setDisabled(true);
-          } else {
-            setDisabled(false);
-          }
-        })
-        .catch(error => {
-          toast.error('Connection error!!!', { autoClose: 1000 });
-
-          setError(error);
-          setDisabled(false);
-          setImages([]);
-        })
-        .finally(() => setLoading(false));
-    };
-
-    console.log('новый запрос после сброса  параметров');
-    onFetchInfo();
-  }, [inputValue, page]);
-
-  // componentDidUpdate(prevProps, prevState) {
-  //   const prevInputValue = prevProps.inputValue;
-  //   const thisInputValue = this.props.inputValue;
-  //   // const page = this.state.page;
-
-  //   if (
-  //     prevInputValue === thisInputValue &&
-  //     this.state.page !== prevState.page &&
-  //     this.state.page === 1
-  //   ) {
-  //     console.log('новый запрос после сброса  параметров');
-  //     onFetchInfo();
-  //   }
-
-  //   if (prevInputValue !== thisInputValue && this.state.page !== 1) {
-  //     console.log('Сброс параметров при новом запросе');
-  //     this.setState({ images: [], page: 1, disabled: false });
-  //   }
-
-  //   if (prevInputValue !== thisInputValue && this.state.page === 1) {
-  //     console.log('выполняется при первом запросе');
-  //     this.setState({
-  //       page: 1,
-  //       error: null,
-  //       // images: [],
-  //       loading: true,
-  //       disabled: false,
-  //     });
-  //     onFetchInfo();
-  //   }
-
-  //   if (prevState.page !== this.state.page && this.state.page !== 1) {
-  //     console.log('выполняется при смене page');
-  //     // console.log(prevState.images);
-  //     // console.log(this.state.images);
-  //     this.setState({
-  //       loading: true,
-  //       error: null,
-  //       // images: [],
-  //       disabled: false,
-  //     });
-  //     onFetchInfo();
-  //   }
-  // }
-
-  const loadMoreClick = () => {
-    setPage(page => page + 1);
-  };
-
+export const ImageGallery = ({ onImageClick, images = [] }) => {
   return (
     <>
       {images && (
@@ -164,16 +16,26 @@ export const ImageGallery = ({ inputValue }) => {
                 webformatURL={webformatURL}
                 largeImageURL={largeImageURL}
                 tags={tags}
+                onImageClick={onImageClick}
               />
             );
           })}
         </ul>
       )}
-      {loading && <Loader />}
-      {error && <p>Nothing found!!!</p>}
-      {disabled && <Button loadMoreClick={loadMoreClick} />}
     </>
   );
+};
+
+ImageGallery.propTypes = {
+  images: PropTypes.arrayOf(
+    PropTypes.shape({
+      webformatURL: PropTypes.string.isRequired,
+      largeImageURL: PropTypes.string.isRequired,
+      tags: PropTypes.string.isRequired,
+      id: PropTypes.number.isRequired,
+    }).isRequired
+  ).isRequired,
+  onImageClick: PropTypes.func.isRequired,
 };
 
 // ----------------------Class------------------------------------------------

@@ -5,13 +5,10 @@ export function fetchImages(thisInputValue, page) {
     .then(response => {
       if (response.ok) {
         return response.json();
-      } throw new Error('Connection error!!!');
+      }
+      throw new Error('Connection error!!!');
     })
     .then(data => {
-    //   if (data.hits.length === 0) {
-    //     throw new Error('Nothing found!!!');
-    //     // return console.log('Nothing found!!!');
-    //   }
       return data;
     });
 }

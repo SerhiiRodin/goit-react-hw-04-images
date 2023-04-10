@@ -1,4 +1,5 @@
 import { useCallback, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import css from './Modal.module.css';
 
 export const Modal = ({ toggleModal, children }) => {
@@ -22,8 +23,6 @@ export const Modal = ({ toggleModal, children }) => {
   }, [handleKeyDown]);
 
   const handleBackdropClick = event => {
-    // console.log(event.target);
-    // console.log(event.currentTarget);
     if (event.target === event.currentTarget) {
       toggleModal();
     }
@@ -34,6 +33,11 @@ export const Modal = ({ toggleModal, children }) => {
       <div className={css.Modal}>{children}</div>
     </div>
   );
+};
+
+Modal.propTypes = {
+  children: PropTypes.node.isRequired,
+  onCloseModal: PropTypes.func,
 };
 
 // ----------------------Class------------------------------------------------

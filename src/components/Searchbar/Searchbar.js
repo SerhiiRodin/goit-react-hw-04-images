@@ -1,22 +1,22 @@
-import {  useState } from 'react';
+import { useState } from 'react';
 import { ReactComponent as ImgSearch } from './search.svg';
+import { toast } from 'react-toastify';
+import PropTypes from 'prop-types';
 
 import css from './Searchbar.module.css';
 
 export const Searchbar = ({ handleFormSubmit }) => {
   const [inputValue, setInputValue] = useState('');
-  // const [hits, sethits] = useState(null);
 
-  const handleChange = event => {
-    // console.log(event.target.value);
-    setInputValue(event.target.value.toLowerCase());
+  const handleChange = ({ target: { value } }) => {
+    setInputValue(value.toLowerCase());
   };
 
   const handleSubmit = event => {
     event.preventDefault();
 
     if (inputValue.trim() === '') {
-      return alert('Enter a keyword to search for a picture.');
+      return toast.error('Enter a keyword to search for a picture.');
     }
 
     handleFormSubmit(inputValue.trim());
@@ -38,10 +38,15 @@ export const Searchbar = ({ handleFormSubmit }) => {
           type="text"
           placeholder="Search images and photos"
           value={inputValue}
+          autoFocus
         />
       </form>
     </header>
   );
+};
+
+Searchbar.propTypes = {
+  handleFormSubmit: PropTypes.func.isRequired,
 };
 
 // ----------------------Class------------------------------------------------
